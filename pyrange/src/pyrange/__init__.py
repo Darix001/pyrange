@@ -1,8 +1,9 @@
 import itertools as it
 import math
 import operator as op
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
+from numbers import Number
 
 range_args = op.attrgetter("start", "stop", "step")
 
@@ -82,46 +83,3 @@ def neg(rng: range) -> range:
 
 
 inv = invert
-
-
-@dataclass(slots=True, frozen=True)
-class GeometricProgression(Sequence):
-    a1: int
-    r: int
-    n: int
-
-    def __getitem__(self, index: int, /):
-        if index < 0:
-            index += self.n
-        if 0 <= index < self.n:
-            return self.a1 * self.r**index
-        else:
-            raise IndexError("GeometricProgression Index out of range.")
-
-    def __len__(self, /):
-        return self.n
-
-    def __iter__(self, /):
-        return it.accumulate(it.repeat(self.r, self.n - 1), op.mul, initial=self.a1)
-
-    def __reversed__(self, /):
-        n = self.n - 1
-        last = self.a1 * (self.r**n)
-        return it.accumulate(it.repeat(self.r, n), op.floordiv, initial=last)
-
-    def index(self, number: int, /):
-        index = math.log(number / self.a1, self.r)
-        if index.is_integer():
-            return math.trunc(index)
-        else:
-            raise ValueError("Number not in GeometricProgression")
-
-
-if __name__ == "__main__":
-    p = GeometricProgression(2, 2, 10)
-    l = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
-    assert l == list(p)
-    assert l[::-1] == list(reversed(p))
-    assert l[-3] == p[-3]
-    assert l[5] == p[5]
-    assert l.index(128) == p.index(128)
