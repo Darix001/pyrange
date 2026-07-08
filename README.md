@@ -20,7 +20,7 @@ A lightweight, efficient Python package for advanced mathematical operations wit
 pip install git+https://github.com/Darix001/pyrange/tree/main/pyrange
 
 # Using uv (recommended)
-uv add https://github.com/Darix001/pyrange/tree/main/pyrange
+uv add git+https://github.com/Darix001/pyrange/tree/main/pyrange
 ```
 
 ## 🚀 Quick Start
