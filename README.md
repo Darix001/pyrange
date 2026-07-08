@@ -18,7 +18,9 @@ A lightweight, efficient Python package for advanced mathematical operations wit
 ```bash
 # Using pip
 pip install git+https://github.com/Darix001/pyrange/tree/main/pyrange
+```
 
+```bash
 # Using uv (recommended)
 uv add git+https://github.com/Darix001/pyrange/tree/main/pyrange
 ```
