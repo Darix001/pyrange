@@ -3,12 +3,15 @@ import math
 import operator as op
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
-from numbers import Number
 
 range_args = op.attrgetter("start", "stop", "step")
 
 
-def range_intersection(*ranges: range) -> range:  # Pending for further testing
+def isdisjoint(rng: range, other: range) -> bool:
+    raise NotImplementedError("This method is still on progress...")
+
+
+def intersection(*ranges: range) -> range:  # Pending for further testing
     match ranges:
         case ():
             return range(0)
@@ -22,6 +25,14 @@ def range_intersection(*ranges: range) -> range:  # Pending for further testing
     start += abs(math.trunc(math.remainder(start, mx_step)))
     stop = min(stops)
     return range(start, stop, step)
+
+
+def issubrange(rng: range, other: range) -> bool:
+    return not rng.step % other.step and rng.start in other and rng[-1] in other
+
+
+def issuperrange(rng: range, other: range) -> bool:
+    return issubrange(other, rng)
 
 
 def sum(rng: range) -> int:
