@@ -17,10 +17,10 @@ A lightweight, efficient Python package for advanced mathematical operations wit
 
 ```bash
 # Using pip
-pip install pyrange
+pip install git+https://github.com/Darix001/pyrange/tree/main/pyrange
 
 # Using uv (recommended)
-uv add pyrange
+uv add https://github.com/Darix001/pyrange/tree/main/pyrange
 ```
 
 ## 🚀 Quick Start
