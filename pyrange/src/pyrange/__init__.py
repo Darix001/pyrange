@@ -1,14 +1,67 @@
-import itertools as it
 import math
 import operator as op
-from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
 
 range_args = op.attrgetter("start", "stop", "step")
 
 
+def bytes_of_int(x: int, /):
+    """Returns number of bytes necessary to represent x"""
+    return math.ceil(x.bit_length() / 8)
+
+
+def tobytes(rng: range, /) -> bytes:
+    return b"".join(map(op.methodcaller("to_bytes", bytes_of_int(rng.stop)), rng))
+
+
+def pstdev(rng: range, /) -> float:
+    """Compute the popular standard deviation of the range."""
+    return math.sqrt(pvar(rng))
+
+
+def pvar(rng: range, /) -> float:
+    """Computes the popular variance of the range."""
+    if (n := len(rng)) <= 1:
+        return 0.0
+    return (((n**2) - 1) * (rng.step**2)) / 12
+
+
+pvariance = pvar
+
+
+def nbytes(rng: range, /):
+    return bytes_of_int(rng.stop) * len(rng)
+
+
+def var(rng: range, /) -> float:
+    if (n := len(rng)) <= 1:
+        return 0.0
+    return ((rng.step**2) * (n * (n + 1))) / 12
+
+
+def stdev(rng: range, /) -> float:
+    return math.sqrt(var(rng))
+
+
+def mean(rng: range, /) -> float:
+    return (rng.start + rng[-1]) / 2
+
+
+def min_max(rng: range, /) -> tuple[int, int]:
+    t = rng.start, rng.stop
+    return t if rng.step > 0 else t[::-1]
+
+
+def min(rng: range, /) -> int:
+    return rng.start if rng.step > 0 else rng.stop
+
+
+def max(rng: range, /) -> int:
+    return rng.start if rng.step < 0 else rng.stop
+
+
 def isdisjoint(rng: range, other: range) -> bool:
-    raise NotImplementedError("This method is still on progress...")
+    return not intersection(rng, other)
 
 
 def intersection(*ranges: range) -> range:  # Pending for further testing
@@ -35,13 +88,13 @@ def issuperrange(rng: range, other: range) -> bool:
     return issubrange(other, rng)
 
 
-def sum(rng: range) -> int:
+def sum(rng: range, /) -> int:
     if rng:
         return (len(rng) * (rng[0] + rng[-1])) // 2
     return 0
 
 
-def prod(rng: range) -> int:
+def prod(rng: range, /) -> int:
     if not rng or 0 in rng:
         return 0
     elif rng.step == rng.start == 1:
@@ -81,16 +134,20 @@ class Number:
     __rlshift__ = __lshift__
 
 
-def invert(rng: range) -> range:
+def invert(rng: range, /) -> range:
     return range(~rng.start, ~rng.stop, -rng.step)
 
 
-def pos(rng: range) -> range:
+def pos(rng: range, /) -> range:
     return rng
 
 
-def neg(rng: range) -> range:
+def neg(rng: range, /) -> range:
     return range(-rng.start, -rng.stop, -rng.step)
 
 
 inv = invert
+
+
+def gt(rng: range, other):
+    pass
